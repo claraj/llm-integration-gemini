@@ -11,10 +11,10 @@ GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
 client = genai.Client(api_key=GOOGLE_API_KEY)
   
 class GeminiEmbeddingFunction(EmbeddingFunction):
-    # Specify whether to generate embeddings for documents, or for running queries
+    # Specify whether to generate embeddings for documents, or not - false for running queries
     document_mode = True
 
-    def __call__(self, input: Documents) -> Embeddings:
+    def __call__(self, input: Documents):
         if self.document_mode:
             embedding_task = 'retrieval_document'
         else:
@@ -41,7 +41,7 @@ with open(clothing_document_file, 'r') as file:
     clothing_data = pandas.read_csv(file)
     ids = list(clothing_data.style_code)
     documents = list(clothing_data.description)
-    
+
 db.upsert(
    ids=ids,
    documents=documents
@@ -60,11 +60,13 @@ print(all_items)
 
 query_oneline = query.replace('\n', ' ')
 
-prompt = f"""You are a helpful assistant called Betty who works for Zoomies! Clothing. The customer has the following question:
+prompt = f"""You are a helpful assistant called Betty who works for Zoomies! Clothing. 
+The customer has the following question:
 
 QUESTION: {query_oneline}
 
-Here is information from the items in the clothing database that may help answer the customer's question,
+Here is information from the items in the clothing database 
+that may help answer the customer's question,
 
 """
 
@@ -80,3 +82,6 @@ response = client.models.generate_content(
     contents=prompt)
 
 print(response.text)
+
+
+

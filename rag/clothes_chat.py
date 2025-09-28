@@ -41,7 +41,7 @@ class GeminiEmbeddingFunction(EmbeddingFunction):
     # Specify whether to generate embeddings for documents; or query mode, for finding relevant documents
     document_mode = True
 
-    def __call__(self, input: Documents) -> Embeddings:
+    def __call__(self, input: Documents):
         if self.document_mode:
             embedding_task = 'retrieval_document'
         else:
