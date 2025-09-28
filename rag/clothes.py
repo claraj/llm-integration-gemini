@@ -51,7 +51,7 @@ embed_fn.document_mode = True  # For generating embeddings
 chroma_client = chromadb.PersistentClient()
 db = chroma_client.get_or_create_collection(name=DB_NAME, embedding_function=embed_fn)
 
-db.add(
+db.upsert(
    ids=ids,
    documents=documents
 )
@@ -61,7 +61,7 @@ db.add(
 embed_fn.document_mode = False
 
 # Search the Chroma DB using the specified query from the customer.
-query = "what sweatpants are good for winter"
+query = "what top goes with the coreedge pants?"
 
 result = db.query(query_texts=[query], n_results=5)
 [all_items] = result["documents"]
