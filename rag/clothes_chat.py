@@ -44,12 +44,12 @@ class GeminiEmbeddingFunction(EmbeddingFunction):
     # @retry.Retry(predicate=is_retriable)
     def __call__(self, input: Documents) -> Embeddings:
         if self.document_mode:
-            embedding_task = "retrieval_document"
+            embedding_task = 'retrieval_document'
         else:
-            embedding_task = "retrieval_query"
+            embedding_task = 'retrieval_query'
 
         response = client.models.embed_content(
-            model="models/text-embedding-004",
+            model='models/text-embedding-004',
             contents=input,
             config=types.EmbedContentConfig(
                 task_type=embedding_task,
@@ -58,7 +58,7 @@ class GeminiEmbeddingFunction(EmbeddingFunction):
         return [e.values for e in response.embeddings]
     
 
-DB_NAME = "zoomies_clothes"
+DB_NAME = 'zoomies_clothes'
 
 embed_fn = GeminiEmbeddingFunction()
 embed_fn.document_mode = True  # For generating embeddings as we load the documents 
@@ -71,7 +71,6 @@ db.upsert(   # add new if they don't exist, don't overwrite if they do.
    documents=documents
 )
 
-
 # Switch to query mode when searching DB
 embed_fn.document_mode = False
 
@@ -83,18 +82,17 @@ while True:
     user_query = input('✨> ')
 
     # Search the Chroma DB using the specified query from the customer.
-    # example query = "what top goes with the core edge pants?"
+    # example query = 'what top goes with the core edge pants?'
 
     number_of_results = 5   # How many documents to retrieve 
 
     result = db.query(query_texts=[user_query], n_results=number_of_results)
-    [all_items] = result["documents"]
+    [all_items] = result['documents']
 
     print(all_items)
 
-    # The LLM will understand the prompt better if the customer query, and the relevant documents, are on one line each. 
-    
-    query_oneline = user_query.replace("\n", " ")
+    # The LLM will understand the structure of the prompt better if the customer query, and the relevant documents, are on one line each. 
+    query_oneline = user_query.replace('\n', ' ')
 
     prompt = f"""The customer has the following question:
 
@@ -105,8 +103,8 @@ while True:
 
     # Add the retrieved documents to the prompt.
     for passage in all_items:
-        passage_oneline = passage.replace("\n", " ")
-        prompt += f"ITEM: {passage_oneline}\n"
+        passage_oneline = passage.replace('\n', ' ')
+        prompt += f'ITEM: {passage_oneline}\n'
 
     print(prompt)
 
