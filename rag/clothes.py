@@ -9,19 +9,11 @@ import pandas
 # Need to specfically provide the API key to use embeddings 
 GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
 client = genai.Client(api_key=GOOGLE_API_KEY)
-
-clothing_document_file = 'fitness_clothing_descriptions.csv'
-
-with open(clothing_document_file, 'r') as file:
-    clothing_data = pandas.read_csv(file)
-    ids = list(clothing_data.style_code)
-    documents = list(clothing_data.description)
   
 class GeminiEmbeddingFunction(EmbeddingFunction):
     # Specify whether to generate embeddings for documents, or for running queries
     document_mode = True
 
-    # @retry.Retry(predicate=is_retriable)
     def __call__(self, input: Documents) -> Embeddings:
         if self.document_mode:
             embedding_task = 'retrieval_document'
@@ -36,16 +28,20 @@ class GeminiEmbeddingFunction(EmbeddingFunction):
             ),
         )
         return [e.values for e in response.embeddings]
-    
-
-DB_NAME = 'zoomies_clothes'
 
 embed_fn = GeminiEmbeddingFunction()
 embed_fn.document_mode = True  # For generating embeddings 
 
 chroma_client = chromadb.PersistentClient()
-db = chroma_client.get_or_create_collection(name=DB_NAME, embedding_function=embed_fn)
+db = chroma_client.get_or_create_collection(name='zoomies_clothes', embedding_function=embed_fn)
 
+clothing_document_file = 'fitness_clothing_descriptions.csv'
+
+with open(clothing_document_file, 'r') as file:
+    clothing_data = pandas.read_csv(file)
+    ids = list(clothing_data.style_code)
+    documents = list(clothing_data.description)
+    
 db.upsert(
    ids=ids,
    documents=documents

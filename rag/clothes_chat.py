@@ -41,7 +41,6 @@ class GeminiEmbeddingFunction(EmbeddingFunction):
     # Specify whether to generate embeddings for documents; or query mode, for finding relevant documents
     document_mode = True
 
-    # @retry.Retry(predicate=is_retriable)
     def __call__(self, input: Documents) -> Embeddings:
         if self.document_mode:
             embedding_task = 'retrieval_document'
