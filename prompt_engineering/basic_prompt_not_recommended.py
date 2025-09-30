@@ -1,6 +1,9 @@
 from google import genai 
+import os 
 
-client = genai.Client()
+GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
+client = genai.Client(api_key=GOOGLE_API_KEY)
+
 
 # These types of question are not recommended
 # There are better ways to perform these types of task 
@@ -24,11 +27,11 @@ print(response.text)
 
 
 # We can solve this problem with code 
-# response = client.models.generate_content(
-#     model='gemini-2.5-flash', 
-#     contents='Sort this array [5, 6, 100, 1, 3, 0, -1, 45, 22]'
-# )
+response = client.models.generate_content(
+    model='gemini-2.5-flash', 
+    contents='Sort this array [5, 6, 100, 1, 3, 0, -1, 45, 22]'
+)
 
-# print(response.text)
+print(response.text)
 
 

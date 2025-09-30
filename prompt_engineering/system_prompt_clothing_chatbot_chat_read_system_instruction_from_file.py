@@ -5,6 +5,11 @@ from google.genai.types import GenerateContentConfig
 import rich 
 from rich.markdown import Markdown
 
+import os 
+
+GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
+client = genai.Client(api_key=GOOGLE_API_KEY)
+
 system_instruction_file_path = os.path.join('system_instructions', 'clothing_chatbot.txt')
 
 try: 
@@ -14,7 +19,6 @@ except Exception as e:
     print('System instructions not found')
     sys.exit()
 
-client = genai.Client()
 chat = client.chats.create(
     model='gemini-2.5-flash',
     config=GenerateContentConfig(

@@ -88,7 +88,7 @@ while True:
     result = db.query(query_texts=[user_query], n_results=number_of_results)
     [all_items] = result['documents']
 
-    print(all_items)
+    # print(all_items)
 
     # The LLM will understand the structure of the prompt better if the customer query, and the relevant documents, are on one line each. 
     query_oneline = user_query.replace('\n', ' ')
@@ -105,7 +105,7 @@ while True:
         passage_oneline = passage.replace('\n', ' ')
         prompt += f'ITEM: {passage_oneline}\n'
 
-    print(prompt)
+    # print(prompt)
 
     # Send message to LLM including retreived documents 
     response = chat.send_message(prompt)

@@ -1,6 +1,9 @@
 from google import genai 
+import os 
 
-client = genai.Client()
+GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
+client = genai.Client(api_key=GOOGLE_API_KEY)
+
 
 response = client.models.generate_content(
     model='gemini-2.5-flash', 
@@ -8,6 +11,8 @@ response = client.models.generate_content(
 )
 
 print(response.text)
+
+# Show token usage for the prompt, processing, response
 print(response.usage_metadata)
 
 
